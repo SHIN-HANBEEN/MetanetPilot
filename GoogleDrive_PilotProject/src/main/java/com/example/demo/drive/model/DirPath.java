@@ -18,4 +18,8 @@ public class DirPath {
 	private String directory;
 	private Date createDate;
 	private Date modifyDate;
+	private String contentType;
+	private int fileSize;
+	private String fileName;
+	private String isFolder;
 }
