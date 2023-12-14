@@ -20,7 +20,6 @@ public class MemberUserDetailsService implements UserDetailsService {
 	
 	@Autowired
 	private IMemberService memberService;
-	
 
 	@Override
 	public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
