@@ -20,8 +20,6 @@ public class MemberUserDetailsService implements UserDetailsService {
 	
 	@Autowired
 	private IMemberService memberService;
-	@Autowired
-	private IDriveService driveService;
 
 	@Override
 	public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
@@ -31,7 +29,7 @@ public class MemberUserDetailsService implements UserDetailsService {
 			//SpringSecurity 가 갖는 예외 발생 with 메시지
 		}
 		
-		List<String> roles = driveService.getRoles();
+		List<String> roles = memberService.getRoles(Integer.parseInt(memberId));
 		// 위의 권한을 활용해서 authorities 를 만들어야 합니다. 
 		
 		List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(roles); 
