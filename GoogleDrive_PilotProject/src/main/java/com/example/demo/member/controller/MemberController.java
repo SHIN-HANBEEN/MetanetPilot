@@ -20,5 +20,4 @@ public class MemberController {
 //GET - /member/delete : 회원 삭제 페이지
 //DELETE - /member/delete : 회원 삭제
 //GET - /member/showinfo : 회원 정보 조회
-//GET - /member/setGrantMember : 다른 회원에게 폴더 공유 페이지
-//POST - /member/setGrantMember : 다른 회원에게 폴더 공유
+//POST - /member/setGrantMember/{UUID}/{memberid} : 다른 회원에게 폴더 공유

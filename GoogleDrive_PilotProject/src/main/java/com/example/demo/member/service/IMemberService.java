@@ -7,7 +7,7 @@ import com.example.demo.member.model.Member;
 
 public interface IMemberService {
 	int regMember(Member member);
-	int updateMember(MemberForUpdate member); //컨트롤러에서 비밀번호 평문이랑 암호화된거 비교
+	int updateMember(Member member); //컨트롤러에서 비밀번호 평문이랑 암호화된거 비교
 	int deleteMember(int memberId); //컨트롤러에서 비밀번호 평문과 암호화 일치한지 비교
 	
 	Member showMemberInfo(int memberId);

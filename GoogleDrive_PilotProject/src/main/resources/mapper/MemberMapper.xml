@@ -36,14 +36,28 @@
 	]]>
 	</select>
 	
+	<!--  update 는 들어오는 값을 기준으로 동적 처리를 하기 위해서, 아래에 추가했습니다.
 	<update id="updateMember" parameterType="com.example.myapp.member.model.Member">
 	<![CDATA[
 		UPDATE MEMBER
 		SET 
-			name=#{name}, password=#{password}, phone=#{phone}, email=#{email} 
+			memberName=#{memberName}, password=#{password}, email=#{email} 
 		WHERE 
-			userid=#{userid}
+			memberId=#{memberId}
 	]]>
+	</update>
+	-->
+	
+	<update id="updateMember" parameterType="com.example.demo.member.model.Member">
+    <![CDATA[
+        UPDATE MEMBER
+        <set>
+            <if test="memberName != null">memberName=#{memberName},</if>
+            <if test="password != null">password=#{password},</if>
+            <if test="email != null">email=#{email}</if>
+        </set>
+        WHERE memberId=#{memberId}
+    ]]>
 	</update>
 	
 	<delete id="deleteMember" parameterType="com.example.myapp.member.model.Member">
