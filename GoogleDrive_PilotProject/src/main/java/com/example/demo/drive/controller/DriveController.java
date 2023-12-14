@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.drive.service.IDriveService;
-import com.example.myapp.board.controller.RequestParam;
 
 @RestController
 public class DriveController {
