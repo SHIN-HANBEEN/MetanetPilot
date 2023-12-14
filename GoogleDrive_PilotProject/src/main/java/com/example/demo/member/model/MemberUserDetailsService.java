@@ -30,6 +30,7 @@ public class MemberUserDetailsService implements UserDetailsService {
 		}
 		
 		List<String> roles = memberService.getRoles(Integer.valueOf(memberId));
+
 		// 위의 권한을 활용해서 authorities 를 만들어야 합니다. 
 		
 		List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(roles); 
