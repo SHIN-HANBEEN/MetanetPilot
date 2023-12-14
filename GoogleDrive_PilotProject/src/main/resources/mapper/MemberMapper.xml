@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.myapp.member.dao.IMemberRepository">
-
+<mapper namespace="com.example.demo.member.repository.IMemberRepository">
+<!-- 
 	<insert id="insertMember" parameterType="com.example.myapp.member.model.Member">
 	<![CDATA[
 		INSERT INTO 
@@ -35,7 +35,8 @@
 			member
 	]]>
 	</select>
-	
+ -->
+ 
 	<!--  update 는 들어오는 값을 기준으로 동적 처리를 하기 위해서, 아래에 추가했습니다.
 	<update id="updateMember" parameterType="com.example.myapp.member.model.Member">
 	<![CDATA[
@@ -47,7 +48,8 @@
 	]]>
 	</update>
 	-->
-	
+
+<!--  
 	<update id="updateMember" parameterType="com.example.demo.member.model.Member">
     <![CDATA[
         UPDATE MEMBER
@@ -78,5 +80,5 @@
 		WHERE userid=#{userid}
 	]]>
 	</select>
-	
+-->
 </mapper>

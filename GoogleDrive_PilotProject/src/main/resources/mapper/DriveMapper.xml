@@ -2,9 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.myapp.board.dao.IBoardRepository">
+<mapper namespace="com.example.demo.drive.repository.IBoardRepository">
+	<!-- String getDirPath(String dirId); 로 실험해보기 -->
+	<select id="getDirPath" parameterType="String" resultType="string">
+	<![CDATA[
+		SELECT 
+			DIRECTORY			AS "directory"
+		FROM DIR_PATH
+		WHERE DIR_ID=#{dirId}
+	]]>
+	</select>
+	
+	<!-- <select id="getHome" parameterType="int" resultType= -->
+	
+<!--  
+	<select id="getFile" parameterType="int" resultType="string">
+	<![CDATA[
+		SELECT 
+			file_id				AS "fileId", 
+			board_id			AS "boardId", 
+			file_name			AS "fileName", 
+			file_size			AS "fileSize", 
+			file_content_type	AS "fileContentType", 
+			file_data 			AS "fileData"
+		FROM board_upload_file 
+		WHERE file_id=#{fileId}
+	]]>
+	</select>
+-->
 
-	<select id="selectArticleListByCategory" parameterType="hashmap" resultType="com.example.myapp.board.model.Board">
+<!--  
+	<select id="selectArticleListByCategory" parameterType="hashmap" resultType="com.example.demo.drive.model.DirPath">
 	<![CDATA[
 		SELECT 
 			board_id 		AS "boardId", 
@@ -31,6 +59,7 @@
 		WHERE rnum BETWEEN #{start} AND #{end}
 	]]>
 	</select>
+-->
 	
 <!-- 	<select id="selectArticleListByCategory" parameterType="hashmap" resultType="com.example.myapp.board.model.Board">
 	<![CDATA[
@@ -52,7 +81,8 @@
 	FETCH FIRST 10 ROWS ONLY
 	]]>
 	</select> -->
-	
+
+<!--  
 	<select id="selectArticle" parameterType="int" resultType="com.example.myapp.board.model.Board">
 	<![CDATA[
 		SELECT 
@@ -76,7 +106,9 @@
 		WHERE board.board_id=#{boardId}
 	]]>
 	</select>
-	
+-->
+
+<!-- 
 	<update id="updateReadCount" parameterType="int">
 	<![CDATA[
 		UPDATE board 
@@ -278,4 +310,6 @@
 	    WHERE rnum BETWEEN #{start} AND #{end}
 	]]>
 	</select>
+	
+	-->
 </mapper>
