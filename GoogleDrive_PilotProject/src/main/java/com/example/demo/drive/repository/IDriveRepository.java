@@ -36,4 +36,6 @@ public interface IDriveRepository {
 	boolean makeFolder(DirPath dirPath);
 	//필요해서 새로 만듬 --완승
 	String getDirectoryByDirId(@Param("parentDirId")String parentDirId); // 상위폴더의 파일의 경로를 가져오기
+	
+	String getMemberIdByDirId(String dirId);
 }

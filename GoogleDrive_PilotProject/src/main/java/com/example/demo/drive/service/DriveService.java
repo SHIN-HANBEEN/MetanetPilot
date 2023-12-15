@@ -140,20 +140,19 @@ public class DriveService implements IDriveService{
 
 	@Override
 	@Transactional
-	public void makeFolder(String memberId, String parentDirId, String folderName, boolean isNewMember){
-		if(isNewMember) {
-			String mainPath = "C:\\dev\\google_drive"; //초기 경로
-			//"C:\dev\google_drive\{memberId}"경로로 폴더를 생성
-			String dirId = createNewFolder(memberId, "", String.valueOf(memberId), mainPath);
-			createNewFolder(memberId, dirId, folderName,  mainPath + "\\"+ String.valueOf(memberId));
-		}else {
-			//parentDirId를 기준으로 새로만들폴더의 상위폴더 경로를 꺼내옴
-			String parentDirPath = driveRepository.getDirectoryByDirId(parentDirId); //기준경로
-			System.out.println(parentDirPath);
-			//"C:\dev\google_drive\parentDirPath\folderName"경로로 폴더를 생성
-			createNewFolder(memberId, parentDirId, folderName, parentDirPath);
-		}
-		
+	public void makeFolder(String memberId, String parentDirId, String folderName) {
+		//parentDirId를 기준으로 새로만들폴더의 상위폴더 경로를 꺼내옴
+		String parentDirPath = driveRepository.getDirectoryByDirId(parentDirId); //기준경로
+		System.out.println(parentDirPath);
+		//"C:\dev\google_drive\parentDirPath\folderName"경로로 폴더를 생성
+		createNewFolder(memberId, parentDirId, folderName, parentDirPath);
+	}
+	
+	@Transactional
+	@Override
+	public void makeFolderForNewMember(String memberId) {
+		String mainPath = "C:\\dev\\google_drive"; //초기 경로
+		createNewFolder(memberId, "", String.valueOf(memberId), mainPath);
 	}
 	
 	@Transactional
@@ -177,6 +176,8 @@ public class DriveService implements IDriveService{
 			throw new RuntimeException();
 		}
 	}
+
+	
 
 //	@Override
 //	public List<String> getHomeDirectory(int memberId) {

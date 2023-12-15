@@ -21,13 +21,14 @@ public interface IDriveService {
 //	void makeFolder(int memberId, String parentDirId); //폴더 만들기 // -완승
 	
 	String getDirPath(String dirId);
-	List<Map<String, Object>> getHomeOfMember(String memberid);
-	List<Map<String, Object>> getSubDirectory(String dirId, String memberId);
-	ResponseEntity<byte[]> downloadFile(String dirId, String memberId);
+	List<Map<String, Object>> getHomeOfMember(String memberid); //얘는 인증 인터셉터가 필요하지 않음.
+	List<Map<String, Object>> getSubDirectory(String dirId, String memberId); //얘는 인증 인터셉터가 필요함.
+	ResponseEntity<byte[]> downloadFile(String dirId, String memberId); //얘는 인증 인터셉터가 필요함.
 	
 	/* 파일을 upload 랑 delete 하면, 해당 폴더의 수정 날짜 변경되어야함 */
 	/* 파일 업로드랑 삭제할 때, 인가 확인해야함 */
-	boolean uploadFile(String memberId, String parentDirId, MultipartFile multipartFile); // -완승
-	boolean deleteFileCascade(String memberId, String parentDirId, String fileName); // -완승
-	void makeFolder(String memberId, String parentDirId, String folderName, boolean isNewMember); //폴더 만들기 // -완승
+	boolean uploadFile(String memberId, String parentDirId, MultipartFile multipartFile); // -완승 //얘는 인증 인터셉터가 필요함.
+	boolean deleteFileCascade(String memberId, String parentDirId, String fileName); // -완승 //얘는 인증 인터셉터가 필요함.
+	void makeFolder(String memberId, String parentDirId, String folderName); //폴더 만들기 // -완승 //얘는 인증 인터셉터가 필요함.
+	void makeFolderForNewMember(String memberId); // 회원 가입하면, 기본 Main Folder 만들기 
 }

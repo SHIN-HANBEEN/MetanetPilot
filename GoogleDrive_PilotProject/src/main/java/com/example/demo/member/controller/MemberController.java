@@ -1,18 +1,29 @@
 package com.example.demo.member.controller;
 
+import java.security.Principal;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.drive.controller.DriveController;
+import com.example.demo.member.model.Member;
 import com.example.demo.member.service.IMemberService;
 
 @RestController
 public class MemberController {
 	@Autowired
 	IMemberService memberService;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	private static final Logger logger = LoggerFactory.getLogger(DriveController.class);
 	
@@ -32,6 +43,48 @@ public class MemberController {
 	public String getMemberLogout() {
 		return "member/logout";
 	}
+	
+	//POST - /member/register : 회원 등록 시도
+	@PostMapping(value="/member/register")
+	public String regMember(@RequestBody Member member) {
+		String encodedPw = passwordEncoder.encode(member.getPassword());
+		member.setPassword(encodedPw);
+		
+		memberService.regMember(member);
+		return "Member Register Success!";
+	}
+	
+	
+	//PUT - /member/update : 회원 정보 수정
+	@PostMapping(value="/member/update")
+	public String updateMember(@RequestBody Member member, Principal principal) {
+		memberService.updateMember(member);
+		return "Member Update Success!";
+		
+		
+//		if () {
+//			return "Member Update Success!";
+//		} else {
+//			return "Member Update Fail!";
+//		}
+		
+//		if(principal.getName().equals(member.getMemberId())) { //인증
+//			
+//		}
+		
+	}
+	
+	@PostMapping(value="/member/delete")
+	public String deleteMember(@RequestBody Member member, Principal principal) {
+		String encodedPw = passwordEncoder.encode(member.getPassword()); 
+		String dbpw = memberService.getPassword(member.getMemberId()); // db의 비번
+		
+		if(principal.getName().equals(member.getMemberId())) { //아이디 같고
+			memberService.deleteMember(member);
+			
+		}
+		return "Member Delete Success!";		
+	}	
 	
 }
 

@@ -4,6 +4,16 @@
 
 <mapper namespace="com.example.demo.member.repository.IMemberRepository">
 
+<!-- int regMember(Member member) -->
+	<insert id="regMember" parameterType="com.example.demo.member.model.Member">
+		<![CDATA[ INSERT INTO member (member_id, password, email) VALUES (#{memberId}, #{password}, #{email}) ]]>
+	</insert>
+
+<!-- void regMemberRole(String memberId); // regMember에서 role 설정 위해 추가 -->
+	<insert id="regMemberRole" parameterType="string">
+		<![CDATA[ INSERT INTO member_roles (role, member_id) VALUES ('ROLE_USER', #{memberId}) ]]>
+	</insert>
+
 <!-- Member showMemberInfo(string memberId);-->
 	<select id="showMemberInfo" parameterType="string" resultType="com.example.demo.member.model.Member">
 	    <![CDATA[

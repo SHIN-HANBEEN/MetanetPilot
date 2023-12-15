@@ -15,6 +15,11 @@ public interface IMemberRepository {
 	List<String> getRoles(String memberid);
 	String getMemberIdByDirId(String dirId);
 	
+	void regMember(Member member);
+	void regMemberRole(String memberId); // regMember에서 role 설정 위해 추가
+	void updateMember(Member member);
+	
+	
 	
 //	Member regMember(Member member);
 //	Member updateMember(Member member);

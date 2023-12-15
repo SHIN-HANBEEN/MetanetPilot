@@ -2,6 +2,7 @@ package com.example.demo.config;
 
 import java.util.Locale;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,11 +13,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
-import com.example.demo.common.filter.LoginInterceptor;
+import com.example.demo.common.filter.DriveAuthInterceptor;
+
 
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+	@Autowired
+	DriveAuthInterceptor driveAuthInterceptor;
+	
 	
 //	@Bean
 //	public MessageSource messageSource() {
@@ -46,14 +51,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //	}
 //	
 //
-//	@Override
-//	public void addInterceptors(InterceptorRegistry registry) {
-////		registry.addInterceptor(localeChangeInterceptor());
-//		registry.addInterceptor(loginInterceptor())
-//				.addPathPatterns("/file/**")
-//				.addPathPatterns("/board/write/**")
-//				.addPathPatterns("/board/update/**")
-//				.addPathPatterns("/board/reply/**")
-//				.addPathPatterns("/board/delete/**");
-//	}
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+//		registry.addInterceptor(localeChangeInterceptor());
+		System.err.println(driveAuthInterceptor + "driveAuthInterceptor add complete");
+		registry.addInterceptor(driveAuthInterceptor)
+				.addPathPatterns("/drive/**");
+	}
 }

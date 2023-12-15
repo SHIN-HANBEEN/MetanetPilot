@@ -73,7 +73,7 @@
 	
 	<!-- DirPath getDirPathVo(String dirId);
 		/drive/downloadFile -->
-	<select id="getDirPathVo" parameterType="string" resultType="com.example.demo.drive.mode.DirPath"> <!-- map 으로 한 이유는 계층 쿼리 level 을 같이 보려고 -->
+	<select id="getDirPathVo" parameterType="string" resultType="com.example.demo.drive.model.DirPath"> <!-- map 으로 한 이유는 계층 쿼리 level 을 같이 보려고 -->
     <![CDATA[
 		SELECT 
 		     dir_id AS "dirId",
@@ -108,10 +108,15 @@
 	</insert>
 	
 	<delete id="deleteFileCascade">
-	DELETE DIR_PATH WHERE MEMBER_ID=#{memberId} AND PARENT_DIR_ID=#{parentDirId} AND FILE_NAME=#{fileName}
+		DELETE DIR_PATH WHERE MEMBER_ID=#{memberId} AND PARENT_DIR_ID=#{parentDirId} AND FILE_NAME=#{fileName}
 	</delete>
 	
-	
+<!-- String getMemberIdByDirId(String dirId); -->
+	<select id="getMemberIdByDirId" parameterType="String" resultType="String">
+		SELECT MEMBER_ID
+		FROM DIR_PATH
+		WHERE DIR_ID = #{dirId}
+	</select>
 	
 <!--  
 	<select id="getFile" parameterType="int" resultType="string">
