@@ -13,13 +13,11 @@ public class MemberUserDetails extends User {
 	//원본 클래스가 바뀌면 못 읽기 때문에, serialVersionUID 라는 것을 만들게 됩니다. 
 	
 	private String email;
-	private int memberId;
 	
-	public MemberUserDetails(String memberName, String password, Collection<? extends GrantedAuthority> authorities,
-			String email, int memberId) {
-		super(memberName, password, authorities);
+	public MemberUserDetails(String memberid, String password, Collection<? extends GrantedAuthority> authorities,
+			String email) {
+		super(memberid, password, authorities);
 		this.email = email; //이런 식으로 userEmail 을 추가해줄 수 있다.
-		this.memberId = memberId;
 	}
 	
 	
@@ -27,9 +25,5 @@ public class MemberUserDetails extends User {
 		return this.email;
 	}
 
-	public int getMemberId() {
-		return memberId;
-	}
-	
 
 }

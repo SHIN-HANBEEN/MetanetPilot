@@ -3,6 +3,51 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.demo.member.repository.IMemberRepository">
+
+<!-- Member showMemberInfo(string memberId);-->
+	<select id="showMemberInfo" parameterType="string" resultType="com.example.demo.member.model.Member">
+	    <![CDATA[
+	        SELECT 
+	            MEMBER_ID AS "memberId",
+	            PASSWORD AS "password",
+	            EMAIL AS "email"
+	        FROM MEMBER
+	        WHERE MEMBER_ID=#{memberid}
+	    ]]>
+	</select>
+
+
+<!-- List<String> getRoles(string memberId); -->
+	<select id="getRoles" parameterType="string" resultType="string">
+	    <![CDATA[
+	        SELECT 
+	            ROLE AS "role",
+	            MEMBER_ID AS "memberId"
+	        FROM MEMBER_ROLES
+	        WHERE MEMBER_ID=#{memberid}
+	    ]]>
+	</select>
+	
+<!-- String getMemberIdByDirId(String dirId); -->
+	<select id="getMemberIdByDirId" parameterType="string" resultType="string">
+	    <![CDATA[
+	        SELECT 
+	            MEMBER_ID AS "memberId"
+	        FROM DIR_PATH
+	        WHERE DIR_ID=#{dirId}
+	    ]]>
+	</select>
+
+
+
+
+
+
+
+
+
+
+
 <!-- 
 	<insert id="insertMember" parameterType="com.example.myapp.member.model.Member">
 	<![CDATA[

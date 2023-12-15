@@ -36,9 +36,9 @@ public class SecurityConfig {
 		
 		//로그인이 필요한 요청에 대해서, 어떤 url 페이지에서 로그인하고, 성공하면 어디로 가는지 설정
 		http.formLogin()
-				.loginPage("/member/login")
-				.usernameParameter("memberId") //userid 라는 이름으로 username 을 parameter 에 담아서 아래의 주소로 request를 보냄
-				.defaultSuccessUrl("/drive/home") //로그인 성공하면 개인 home directory 로 보낸다.
+				.loginPage("/member/login") 
+				.usernameParameter("memberid") //id를 memberid 라는 이름으로 json 에서 받아온다는 설정이다
+				.defaultSuccessUrl("/member/loginsuccess") //로그인 성공하면 개인 home directory 로 보낸다.
 			.and()
 			.logout()
 				.logoutUrl("/member/logout")
@@ -48,23 +48,23 @@ public class SecurityConfig {
 		return http.build(); //보통은 이렇게 마지막에 build 해서 반환한 것을 사용한다.
 	}
 	
-	@Bean
-	@ConditionalOnMissingBean(UserDetailsService.class) //이 빈이 없으면 빈으로 만들어주세요!
-	public InMemoryUserDetailsManager userDetailsService() {
-		List<UserDetails> userDetailsList = new ArrayList<>();
-		userDetailsList.add(User.withUsername("testadmin")
-				.password("{noop}testadmin")
-				.roles("ADMIN").build());
-		userDetailsList.add(User.withUsername("testuser")
-				.password("{noop}testuser")
-				.roles("USER").build());
-		userDetailsList.add(User.withUsername("ted")
-				.password("{noop}demo")
-				.roles("ADMIN", "USER").build());
-		
-		InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager(userDetailsList); 
-		return manager;
-	}
+//	@Bean
+//	@ConditionalOnMissingBean(UserDetailsService.class) //이 빈이 없으면 빈으로 만들어주세요!
+//	public InMemoryUserDetailsManager userDetailsService() {
+//		List<UserDetails> userDetailsList = new ArrayList<>();
+//		userDetailsList.add(User.withUsername("testadmin")
+//				.password("{noop}testadmin")
+//				.roles("ADMIN").build());
+//		userDetailsList.add(User.withUsername("testuser")
+//				.password("{noop}testuser")
+//				.roles("USER").build());
+//		userDetailsList.add(User.withUsername("ted")
+//				.password("{noop}demo")
+//				.roles("ADMIN", "USER").build());
+//		
+//		InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager(userDetailsList); 
+//		return manager;
+//	}
 	
 	@Bean
 	PasswordEncoder passwordEncoder() { 

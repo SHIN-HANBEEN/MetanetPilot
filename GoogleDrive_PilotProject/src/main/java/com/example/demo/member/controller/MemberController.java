@@ -16,10 +16,16 @@ public class MemberController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DriveController.class);
 	
-	@GetMapping(value="/member/login")
+	@GetMapping("/member/login")
 	public String getMemberLogin() {
 		logger.info("============ /member/login Get activated ================");
 		return "member/login";
+	}
+	
+	@GetMapping("/member/loginsuccess")
+	public String loginSuccess() {
+		logger.info("============ /member/login Get activated ================");
+		return "LOGIN SUCCESS";
 	}
 	
 	@GetMapping(value="/member/logout")

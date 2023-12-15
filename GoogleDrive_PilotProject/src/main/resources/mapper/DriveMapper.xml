@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.demo.drive.repository.IBoardRepository">
-	<!-- String getDirPath(String dirId); 로 실험해보기 -->
+<mapper namespace="com.example.demo.drive.repository.IDriveRepository">
+	<!-- String getDirPath(String dirId); -->
 	<select id="getDirPath" parameterType="String" resultType="string">
 	<![CDATA[
 		SELECT 
@@ -13,7 +13,105 @@
 	]]>
 	</select>
 	
-	<!-- <select id="getHome" parameterType="int" resultType= -->
+	<!-- List<DirPath> getHomeOfMember(int memberid);
+		/drive/home 계층형 쿼리 -->
+	<select id="getHomeOfMember" parameterType="string" resultType="map">
+    <![CDATA[
+        SELECT 
+		    dir_id AS "dirId",
+		    member_id AS "memberId",
+		    parent_dir_id AS "parentDirId",
+		    directory AS "directory",
+		    is_folder AS "isFolder",
+		     create_date AS "createDate",
+		     modify_date AS "modifyDate",
+		     content_type AS "contentType",
+		     file_size AS "fileSize",
+		     file_name AS "fileName",
+		     level
+		FROM dir_path
+		WHERE member_id = #{memberId} AND level < 3 
+		START WITH parent_dir_id IS NULL
+		CONNECT BY PRIOR dir_id = parent_dir_id
+		ORDER BY dir_id
+    ]]>
+	</select>
+	
+	<!-- List<DirPath> getSubDirectory(String parentdirid);
+		/drive/getsub 계층형 쿼리(계층형으로 안해도 되긴 함) -->
+	<select id="getSubDirectory" parameterType="string" resultType="map"> <!-- map 으로 한 이유는 계층 쿼리 level 을 같이 보려고 -->
+    <![CDATA[
+		SELECT 
+		     dir_id AS "dirId",
+		    member_id AS "memberId",
+		    parent_dir_id AS "parentDirId",
+		    directory AS "directory",
+		    is_folder AS "isFolder",
+		     create_date AS "createDate",
+		     modify_date AS "modifyDate",
+		     content_type AS "contentType",
+		     file_size AS "fileSize",
+		     file_name AS "fileName",
+		     level
+		FROM dir_path
+		WHERE level < 2 
+		START WITH parent_dir_id = #{dirId}
+		CONNECT BY PRIOR dir_id = parent_dir_id
+		ORDER BY dir_id
+    ]]>
+	</select>
+	
+	<!-- String isFolder(String dirId); -->
+	<select id="isFolder" parameterType="string" resultType="string"> <!-- map 으로 한 이유는 계층 쿼리 level 을 같이 보려고 -->
+    <![CDATA[
+		SELECT 
+		     is_folder as "isFolder"
+		FROM dir_path
+		WHERE dir_id = #{dirId}
+    ]]>
+	</select>
+	
+	<!-- DirPath getDirPathVo(String dirId);
+		/drive/downloadFile -->
+	<select id="getDirPathVo" parameterType="string" resultType="com.example.demo.drive.mode.DirPath"> <!-- map 으로 한 이유는 계층 쿼리 level 을 같이 보려고 -->
+    <![CDATA[
+		SELECT 
+		     dir_id AS "dirId",
+		    member_id AS "memberId",
+		    parent_dir_id AS "parentDirId",
+		    directory AS "directory",
+		    is_folder AS "isFolder",
+		     create_date AS "createDate",
+		     modify_date AS "modifyDate",
+		     content_type AS "contentType",
+		     file_size AS "fileSize",
+		     file_name AS "fileName"
+		FROM dir_path
+		WHERE dir_id = #{dirId}
+    ]]>
+	</select>
+	
+<!-- 완승좌 -->
+<!-- 완승 -->
+	<select id="getDirectoryByDirId" parameterType="String" resultType="String">
+		SELECT DIRECTORY FROM DIR_PATH WHERE DIR_ID=#{parentDirId}
+	</select>
+	
+	<insert id="makeFolder" >
+		INSERT INTO DIR_PATH (DIR_ID, MEMBER_ID, PARENT_DIR_ID, DIRECTORY, CREATE_DATE, MODIFY_DATE, CONTENT_TYPE, FILE_SIZE, FILE_NAME, IS_FOLDER)
+		VALUES(#{dirId},#{memberId},#{parentDirId},#{directory},#{createDate},#{modifyDate},#{contentType},#{fileSize},#{fileName},#{isFolder})
+	</insert>
+	
+	<insert id="uploadFile" >
+		INSERT INTO DIR_PATH (DIR_ID, MEMBER_ID, PARENT_DIR_ID, DIRECTORY, CREATE_DATE, MODIFY_DATE, CONTENT_TYPE, FILE_SIZE, FILE_NAME, IS_FOLDER)
+		VALUES(#{dirId},#{memberId},#{parentDirId},#{directory},#{createDate},#{modifyDate},#{contentType},#{fileSize},#{fileName},#{isFolder})
+	</insert>
+	
+	<delete id="deleteFileCascade">
+	DELETE DIR_PATH WHERE MEMBER_ID=#{memberId} AND PARENT_DIR_ID=#{parentDirId} AND FILE_NAME=#{fileName}
+	</delete>
+	
+	
 	
 <!--  
 	<select id="getFile" parameterType="int" resultType="string">
