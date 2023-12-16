@@ -22,21 +22,20 @@ public class DriveAuthInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		System.out.println("인터셉터@@@#@#@#");
+		System.out.println("드라이브 Auth 인터셉터 실행되었습니다.");
 		Principal principal = request.getUserPrincipal();
-		System.out.println(request.getUserPrincipal());
-		System.out.println(request.getSession());
-		//if (principal != null) {
+
+		if (principal != null) {
 			if (!memberService.isMemberIdAuthenticForDrive(principal.getName(), request.getPathInfo())) {
 				System.out.println("인증 실패 : DriveAuthInterceptor");
 				throw new AuthException();
 			}
 			System.out.println("인증 성공 : DriveAuthInterceptor");
 			return true;
-//		} else {
-//			System.out.println("인증 실패 : DriveAuthInterceptor");
-//			throw new AuthException();
-//		}
+		} else {
+			System.out.println("인증 실패 : DriveAuthInterceptor");
+			throw new AuthException();
+		}
 	}
 
 	@Override

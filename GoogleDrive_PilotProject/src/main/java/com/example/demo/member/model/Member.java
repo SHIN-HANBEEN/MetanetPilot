@@ -13,5 +13,5 @@ public class Member {
 	private String memberId;
 	private String password;
 	private String email;
-	private String role;
+//	private String role;
 }

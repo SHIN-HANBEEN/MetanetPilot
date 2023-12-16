@@ -48,10 +48,30 @@
 	    ]]>
 	</select>
 
-
-
-
-
+<!-- void updateMember(String encodedPw, String email); -->
+	<update id="updateMember" parameterType="map">
+    	<![CDATA[
+	        UPDATE MEMBER
+	        <set>
+	            <if test="encodedPw != null">password=#{encodedPw},</if>
+	            <if test="email != null">email=#{email},</if>
+	            
+	            <!-- Dummy set to ensure the SET keyword is present even if no updates are performed -->
+	            1=1
+	        </set>
+	        WHERE member_id=#{memberId}
+    	]]>
+	</update>
+	
+<!-- String getPasswordByMemberId(String memberId); -->
+	<select id="getPasswordByMemberId" parameterType="string">
+		<![CDATA[
+	        SELECT 
+	            password as "password"
+	        FROM MEMBER
+	        WHERE MEMBER_ID=#{memberId}
+	    ]]>
+	</select>
 
 
 

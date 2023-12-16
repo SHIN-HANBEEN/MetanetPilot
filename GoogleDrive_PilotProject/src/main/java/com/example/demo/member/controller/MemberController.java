@@ -1,6 +1,8 @@
 package com.example.demo.member.controller;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +11,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,35 +59,24 @@ public class MemberController {
 	
 	
 	//PUT - /member/update : 회원 정보 수정
-	@PostMapping(value="/member/update")
-	public String updateMember(@RequestBody Member member, Principal principal) {
-		memberService.updateMember(member);
+	@PutMapping(value="/member/update")
+	public String updateMember(@RequestBody Map<String, String> MemberMap) {
+		//인코딩 해서 db 에 저장.
+		memberService.updateMember(passwordEncoder.encode(MemberMap.get("password")), MemberMap.get("email"));
 		return "Member Update Success!";
-		
-		
-//		if () {
-//			return "Member Update Success!";
-//		} else {
-//			return "Member Update Fail!";
-//		}
-		
-//		if(principal.getName().equals(member.getMemberId())) { //인증
-//			
-//		}
-		
 	}
 	
-	@PostMapping(value="/member/delete")
-	public String deleteMember(@RequestBody Member member, Principal principal) {
-		String encodedPw = passwordEncoder.encode(member.getPassword()); 
-		String dbpw = memberService.getPassword(member.getMemberId()); // db의 비번
-		
-		if(principal.getName().equals(member.getMemberId())) { //아이디 같고
-			memberService.deleteMember(member);
-			
-		}
-		return "Member Delete Success!";		
-	}	
+//	@PostMapping(value="/member/delete")
+//	public String deleteMember(@RequestBody Map<String, String> member, Principal principal) {
+//		String encodedPw = passwordEncoder.encode(member.get("memberId")); 
+//		String dbpw = memberService.getPassword(member.get("memberId")); // db의 비번
+//		
+//		if(principal.getName().equals(member.getMemberId())) { //아이디 같고
+//			memberService.deleteMember(member);
+//			
+//		}
+//		return "Member Delete Success!";		
+//	}	
 	
 }
 

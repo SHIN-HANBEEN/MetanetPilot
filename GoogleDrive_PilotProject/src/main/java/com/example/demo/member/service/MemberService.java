@@ -33,14 +33,19 @@ public class MemberService implements IMemberService{
 	}
 
 	@Override
-	public void updateMember(Member member) {
-		memberRepository.updateMember(member);
+	public void updateMember(String encodedPw, String email) {
+		memberRepository.updateMember(encodedPw, email);
 	}
 	
 	@Override
 	public boolean isMemberIdAuthenticForDrive(String memberId, String dirId) {
 		System.out.println("멤버서비스실행됨");
 		return memberId.equals(driveRepository.getMemberIdByDirId(dirId));
+	}
+	
+	@Override
+	public boolean isMemberIdAuthenticForMember(String principalMemberId, String inputMemberId) {
+		return principalMemberId.equals(inputMemberId);
 	}
 	
 
@@ -53,9 +58,8 @@ public class MemberService implements IMemberService{
 	}
 	
 	@Override
-	public String getPassword(String userid) {
-//		return memberRepository.getPassword(userid);
-		return "";
+	public String getPasswordByMemberId(String memberId) {
+		return memberRepository.getPasswordByMemberId(memberId);
 	}
 	
 	@Override
@@ -67,6 +71,8 @@ public class MemberService implements IMemberService{
 	public List<String> getRoles(String memberid) {
 		return memberRepository.getRoles(memberid);
 	}
+
+	
 
 	
 

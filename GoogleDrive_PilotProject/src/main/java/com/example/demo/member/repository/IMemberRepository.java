@@ -17,7 +17,9 @@ public interface IMemberRepository {
 	
 	void regMember(Member member);
 	void regMemberRole(String memberId); // regMember에서 role 설정 위해 추가
-	void updateMember(Member member);
+	void updateMember(String encodedPw, String email);
+	
+	String getPasswordByMemberId(String memberId);
 	
 	
 	

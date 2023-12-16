@@ -115,7 +115,7 @@
 	<select id="getMemberIdByDirId" parameterType="String" resultType="String">
 		SELECT MEMBER_ID
 		FROM DIR_PATH
-		WHERE DIR_ID = #{dirId}
+		WHERE DIR_ID=#{dirId}
 	</select>
 	
 <!--  
