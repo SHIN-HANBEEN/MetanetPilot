@@ -1,9 +1,14 @@
 package com.example.demo.drive.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.drive.service.IDriveService;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/drive")
@@ -56,9 +63,24 @@ public class DriveController {
 	
 	//다운로드
 	@GetMapping("/downloadfile")
-	public void downloadFile(@RequestParam String dirid) {
+	public void downloadFile(@RequestParam String dirid, HttpServletResponse response) {
 		logger.info("=================downloadFile Get activate=================");
 		//return driveService.downloadFile(dirid);
+		try {
+			byte[] files = FileUtils.readFileToByteArray(new File("C:\\dev\\google_drive\\kim\\test\\cap.JPG"));
+			response.setContentType("application/octet-stream");
+            response.setContentLength(files.length);
+            response.setHeader("Content-Disposition","attachment; fileName=\""+ URLEncoder.encode("cap.JPG",StandardCharsets.UTF_8)+"\";");
+            response.setHeader("Content-Transfer-Encoding","binary");
+
+            response.getOutputStream().write(files);
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			//https://velog.io/@on5949/SpringBoot%ED%8C%8C%EC%9D%BC-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C%EC%9D%98-%EB%91%90%EA%B0%80%EC%A7%80-%EB%B0%A9%EB%B2%95
+		}
 	}
 	
 	//파일 업로드

@@ -68,12 +68,12 @@ public class DriveService implements IDriveService{
 	}
 
 	@Override
-	public Resource downloadFile(String dirId) {
+	public String downloadFile(String dirId) {
 		//dirId 를 가지고 가서, DirPath 객체를 가져오자. 
 		DirPath dirPathVO = driveRepository.getDirPathVo(dirId);
 		String directory = dirPathVO.getDirectory();
 		String fileName = dirPathVO.getFileName();
-		return new ClassPathResource(directory+"//"+fileName);
+		return directory+"//"+fileName;
 	}
 	
 	@Override
