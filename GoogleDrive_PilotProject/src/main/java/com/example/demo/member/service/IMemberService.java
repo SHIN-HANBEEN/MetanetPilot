@@ -2,7 +2,6 @@ package com.example.demo.member.service;
 
 import java.util.List;
 
-import com.example.demo.member.dto.MemberForUpdate;
 import com.example.demo.member.model.Member;
 
 public interface IMemberService {

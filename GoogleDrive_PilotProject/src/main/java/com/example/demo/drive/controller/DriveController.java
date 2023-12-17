@@ -7,6 +7,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,9 +56,9 @@ public class DriveController {
 	
 	//다운로드
 	@GetMapping("/downloadfile")
-	public ResponseEntity<byte[]> downloadFile(@RequestParam String dirid, Principal principal) {
+	public void downloadFile(@RequestParam String dirid) {
 		logger.info("=================downloadFile Get activate=================");
-		return driveService.downloadFile(dirid, principal.getName());
+		//return driveService.downloadFile(dirid);
 	}
 	
 	//파일 업로드
@@ -76,7 +77,7 @@ public class DriveController {
 	
 	@PostMapping("/drive/makefolder/{uuid}")
 	public void makeFolder(@PathVariable String uuid, Principal principal, @RequestBody String folderName) {
-		driveService.makeFolder(principal.getName(), uuid, folderName, false);
+		driveService.makeFolder(principal.getName(), uuid, folderName);
 	}
 	
 	@DeleteMapping("/drive/folders/{uuid}/{fileName}")

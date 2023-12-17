@@ -11,6 +11,8 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,26 +68,12 @@ public class DriveService implements IDriveService{
 	}
 
 	@Override
-	public ResponseEntity<byte[]> downloadFile(String dirId, String memberId) {
+	public Resource downloadFile(String dirId) {
 		//dirId 를 가지고 가서, DirPath 객체를 가져오자. 
 		DirPath dirPathVO = driveRepository.getDirPathVo(dirId);
-		
-		//dirId 를 가지고 가서, 해당 dirId 의 memberId 를 들고 와야 한다.
-		String dbMemberId = dirPathVO.getMemberId();
-		
-		if (dbMemberId.equals(memberId)) {//db에서 들고온 memberId 와 principal 에서 꺼낸 memberId 가 같은지 확인한다.
-			//그 전에, 폴더인지 파일인지 확인을 해서 파일이면 다운로드를 하고, 폴더면 안내 메시지를 반환한다. 
-			String isFolder = dirPathVO.getIsFolder();
-			if(isFolder.equals("TRUE")) {
-				logger.info("========= getSubDirectory is denied because dirId was for Folder not file =========");
-			} else {
-				String path = dirPathVO.getDirectory();
-				
-				//driveRepository.sendFile 을 사용해서 file 을 서버 local 에서 들고온 것을 반환한다.
-				return driveRepositoryForFile.sendFile(path);
-			}
-		}
-		return (ResponseEntity<byte[]>) new Object(); //빈 MultipartFile 반환
+		String directory = dirPathVO.getDirectory();
+		String fileName = dirPathVO.getFileName();
+		return new ClassPathResource(directory+"//"+fileName);
 	}
 	
 	@Override
