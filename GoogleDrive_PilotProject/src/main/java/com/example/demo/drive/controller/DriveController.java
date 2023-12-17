@@ -84,39 +84,41 @@ public class DriveController {
 //			//https://velog.io/@on5949/SpringBoot%ED%8C%8C%EC%9D%BC-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C%EC%9D%98-%EB%91%90%EA%B0%80%EC%A7%80-%EB%B0%A9%EB%B2%95
 //		}
 //	}
+	
+	
 	//다운로드
-		@GetMapping("/downloadfile/{dirid}")
-		public void downloadFile(@PathVariable String dirid, HttpServletResponse response) {
-			logger.info("=================downloadFile Get activate=================");
-			//return driveService.downloadFile(dirid);
-			try {
-				Map<String, String> fileInfo = driveService.getPath(dirid);
-				byte[] files = FileUtils.readFileToByteArray(new File(fileInfo.get("fullPath")));
-				response.setContentType("application/octet-stream");
-	            response.setContentLength(files.length);
-	            response.setHeader("Content-Disposition","attachment; fileName=\""+ URLEncoder.encode(fileInfo.get("fileName"),StandardCharsets.UTF_8)+"\";");
-	            response.setHeader("Content-Transfer-Encoding","binary");
+	@GetMapping("/downloadfile/{dirid}")
+	public void downloadFile(@PathVariable String dirid, HttpServletResponse response) {
+		logger.info("=================downloadFile Get activate=================");
+		//return driveService.downloadFile(dirid);
+		try {
+			Map<String, String> fileInfo = driveService.getPath(dirid);
+			byte[] files = FileUtils.readFileToByteArray(new File(fileInfo.get("fullPath")));
+			response.setContentType("application/octet-stream");
+            response.setContentLength(files.length);
+            response.setHeader("Content-Disposition","attachment; fileName=\""+ URLEncoder.encode(fileInfo.get("fileName"),StandardCharsets.UTF_8)+"\";");
+            response.setHeader("Content-Transfer-Encoding","binary");
 
-	            response.getOutputStream().write(files);
-	            response.getOutputStream().flush();
-	            response.getOutputStream().close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				//https://velog.io/@on5949/SpringBoot%ED%8C%8C%EC%9D%BC-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C%EC%9D%98-%EB%91%90%EA%B0%80%EC%A7%80-%EB%B0%A9%EB%B2%95
-			}
+            response.getOutputStream().write(files);
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			//https://velog.io/@on5949/SpringBoot%ED%8C%8C%EC%9D%BC-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C%EC%9D%98-%EB%91%90%EA%B0%80%EC%A7%80-%EB%B0%A9%EB%B2%95
 		}
+	}
 	
 	//파일 업로드
-	@PostMapping(path = "/uploadfile", consumes = "multipart/form-data", produces = "application/json")
-	public String uploadFile(Principal principal, HttpSession session) {
-		logger.info("================= uploadFile Post activate =================");
-		System.out.println("principal.getName : " +  principal.getName());
-		System.out.println("sesstion.dirId : " +  (String)session.getAttribute("dirId"));
-		System.out.println("sesstion.file : " +  (MultipartFile)session.getAttribute("file"));
-		driveService.uploadFile(principal.getName(), (String)session.getAttribute("dirId"), (MultipartFile)session.getAttribute("file"));
-		return "uploadfile success";
-	}
+//	@PostMapping(path = "/uploadfile", consumes = "multipart/form-data", produces = "application/json")
+//	public String uploadFile(Principal principal, HttpSession session) {
+//		logger.info("================= uploadFile Post activate =================");
+//		System.out.println("principal.getName : " +  principal.getName());
+//		System.out.println("sesstion.dirId : " +  (String)session.getAttribute("dirId"));
+//		System.out.println("sesstion.file : " +  (MultipartFile)session.getAttribute("file"));
+//		driveService.uploadFile(principal.getName(), (String)session.getAttribute("dirId"), (MultipartFile)session.getAttribute("file"));
+//		return "uploadfile success";
+//	}
 	
    @PostMapping(path = "/folders/{uuid}", consumes = "multipart/form-data", produces = "application/json")
    public void uploadFile(@RequestParam(value = "file", required = false) MultipartFile multipartFile, @PathVariable String uuid,
@@ -130,12 +132,12 @@ public class DriveController {
 	
 	
 	
-	@PostMapping("/drive/makefolder/{uuid}")
-	public void makeFolder(@PathVariable String uuid, Principal principal, @RequestBody String folderName) {
+	@PostMapping("/makefolder/{uuid}")
+	public void makeFolder(@PathVariable String uuid, Principal principal, @RequestParam String folderName) {
 		driveService.makeFolder(principal.getName(), uuid, folderName);
 	}
 	
-	@DeleteMapping("/drive/folders/{uuid}/{fileName}")
+	@DeleteMapping("/folders/{uuid}/{fileName}")
 	public void deleteFileOrFolder(@PathVariable String uuid, @PathVariable String fileName, Principal principal) {
 		boolean deleteFileCascade = driveService.deleteFileCascade(principal.getName(), uuid, fileName);
 	}

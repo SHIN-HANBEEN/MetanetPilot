@@ -61,7 +61,7 @@ public class DriveService implements IDriveService{
 //		map.put("fileName", fileName);
 //		return map;
 //	}
-	@Override
+	@Override //downloadfile
 	public Map<String, String> getPath(String dirId) {
 		//dirId 를 가지고 가서, DirPath 객체를 가져오자. 
 		Map<String, String> map = new HashMap<>();
@@ -171,7 +171,7 @@ public class DriveService implements IDriveService{
 		// 해당 디렉토리가 없을경우 디렉토리를 생성합니다.
 		if (!Folder.exists()) {
 			System.out.println(newDirPath);
-			boolean isFolderCreated = driveRepository.makeFolder(new DirPath(uuid, memberId, parentDirId, newDirPath, "TRUE",
+			boolean isFolderCreated = driveRepository.makeFolder(new DirPath(uuid, parentDirId, memberId, newDirPath, "TRUE",
 					nowDate, nowDate,"folder", 0, folderName)); 
 			if(isFolderCreated) Folder.mkdir(); //폴더 생성합니다.
 		    System.out.println("폴더가 생성되었습니다.");
