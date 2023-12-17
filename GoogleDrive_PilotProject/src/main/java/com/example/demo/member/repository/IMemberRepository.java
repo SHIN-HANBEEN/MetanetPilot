@@ -3,6 +3,7 @@ package com.example.demo.member.repository;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -17,9 +18,14 @@ public interface IMemberRepository {
 	
 	void regMember(Member member);
 	void regMemberRole(String memberId); // regMember에서 role 설정 위해 추가
-	void updateMember(String encodedPw, String email);
+	void updateMember(@Param("memberId") String memberId, @Param("encodedPw") String encodedPw, @Param("email") String email);
 	
 	String getPasswordByMemberId(String memberId);
+	
+	void deleteMemberRole(String memberId);
+	void deleteMember(String memberId);
+	void deleteSharedTable(String memberId);
+	
 	
 	
 	

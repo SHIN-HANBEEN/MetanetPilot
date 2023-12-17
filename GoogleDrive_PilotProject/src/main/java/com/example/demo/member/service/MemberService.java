@@ -33,8 +33,8 @@ public class MemberService implements IMemberService{
 	}
 
 	@Override
-	public void updateMember(String encodedPw, String email) {
-		memberRepository.updateMember(encodedPw, email);
+	public void updateMember(String memberId, String encodedPw, String email) {
+		memberRepository.updateMember(memberId, encodedPw, email);
 	}
 	
 	@Override
@@ -51,9 +51,12 @@ public class MemberService implements IMemberService{
 
 	@Transactional
 	@Override
-	public void deleteMember(Member member) {
-//		memberRepository.deleteMemberRole(member);
-//		memberRepository.deleteMember(member);
+	public void deleteMember(String memberId) {
+		memberRepository.deleteMemberRole(memberId);
+		driveRepository.deleteSharedTable(memberId);
+		String homeDir = driveRepository.getHomeDirByMemberId(memberId);
+		driveRepository.deleteDirPathByHomeDirCascade(memberId, homeDir);
+		memberRepository.deleteMember(memberId);
 
 	}
 	

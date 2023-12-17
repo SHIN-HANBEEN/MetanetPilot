@@ -48,19 +48,14 @@
 	    ]]>
 	</select>
 
-<!-- void updateMember(String encodedPw, String email); -->
+<!-- void updateMember(@Param("memberId") String memberId, @Param("encodedPw") String encodedPw, @Param("email") String email); -->
 	<update id="updateMember" parameterType="map">
-    	<![CDATA[
-	        UPDATE MEMBER
-	        <set>
-	            <if test="encodedPw != null">password=#{encodedPw},</if>
-	            <if test="email != null">email=#{email},</if>
-	            
-	            <!-- Dummy set to ensure the SET keyword is present even if no updates are performed -->
-	            1=1
-	        </set>
-	        WHERE member_id=#{memberId}
-    	]]>
+        UPDATE MEMBER
+        <set>
+            <if test="encodedPw != null">password=#{encodedPw},</if>
+            <if test="email != null">email=#{email},</if>
+        </set>
+        WHERE member_id=#{memberId}
 	</update>
 	
 <!-- String getPasswordByMemberId(String memberId); -->
@@ -72,6 +67,26 @@
 	        WHERE MEMBER_ID=#{memberId}
 	    ]]>
 	</select>
+
+<!-- void deleteMemberRole(String memberId); -->
+	<delete id="deleteMemberRole" parameterType="string">
+		<![CDATA[
+			DELETE FROM
+				member_roles 
+			WHERE
+				member_id=#{memberId}
+		]]>
+	</delete>
+
+<!-- void deleteMember(String memberId); -->
+	<delete id="deleteMember" parameterType="string">
+		<![CDATA[
+			DELETE FROM
+				member 
+			WHERE
+				member_id=#{memberId}
+		]]>
+	</delete>
 
 
 

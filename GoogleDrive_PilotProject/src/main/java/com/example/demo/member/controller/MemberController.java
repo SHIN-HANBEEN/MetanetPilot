@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.drive.controller.DriveController;
 import com.example.demo.member.model.Member;
 import com.example.demo.member.service.IMemberService;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 public class MemberController {
@@ -60,9 +63,14 @@ public class MemberController {
 	
 	//PUT - /member/update : 회원 정보 수정
 	@PutMapping(value="/member/update")
-	public String updateMember(@RequestBody Map<String, String> MemberMap) {
+	public String updateMember(HttpSession session) {
+		System.out.println("session.getAttribute(\"password\") : " + session.getAttribute("password"));
+		System.out.println("session.getAttribute(\"email\") : " + session.getAttribute("email"));
+		
 		//인코딩 해서 db 에 저장.
-		memberService.updateMember(passwordEncoder.encode(MemberMap.get("password")), MemberMap.get("email"));
+		memberService.updateMember((String)session.getAttribute("memberId"), 
+				passwordEncoder.encode((String)session.getAttribute("password")),
+				(String)session.getAttribute("email"));
 		return "Member Update Success!";
 	}
 	
@@ -70,22 +78,16 @@ public class MemberController {
 	@PutMapping(value="/member/update/test")
 	public String updateMemberTest(@RequestBody Map<String, String> MemberMap) {
 		
-		System.out.println("requestbody에서 email 꺼내기" + MemberMap.get("email"));
+		System.out.println("requestbody에서 password 꺼내기" + MemberMap.get("password"));
 		System.out.println("requestbody에서 email 꺼내기" + MemberMap.get("email"));
 		return "Member Update Test Success!";
 	}
 	
-//	@PostMapping(value="/member/delete")
-//	public String deleteMember(@RequestBody Map<String, String> member, Principal principal) {
-//		String encodedPw = passwordEncoder.encode(member.get("memberId")); 
-//		String dbpw = memberService.getPassword(member.get("memberId")); // db의 비번
-//		
-//		if(principal.getName().equals(member.getMemberId())) { //아이디 같고
-//			memberService.deleteMember(member);
-//			
-//		}
-//		return "Member Delete Success!";		
-//	}	
+	@DeleteMapping(value="/member/delete")
+	public String deleteMember(Principal principal) {
+		memberService.deleteMember(principal.getName());
+		return "Member Delete Success!";		
+	}	
 	
 }
 

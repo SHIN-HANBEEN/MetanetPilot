@@ -1,15 +1,13 @@
 package com.example.demo.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.demo.common.filter.DriveAuthInterceptor;
 import com.example.demo.common.filter.MemberAuthInterceptor;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 
 
@@ -57,7 +55,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		registry.addInterceptor(driveAuthInterceptor)
 				.addPathPatterns("/drive/**");
 		registry.addInterceptor(memberAuthInterceptor)
-				.addPathPatterns("/member/update");
+				.addPathPatterns("/member/update") //이것도 엄밀히 말하면, 사용할 필요가 없긴 했음,, 
+				.order(Ordered.HIGHEST_PRECEDENCE); //interceptor 가 동작한 다음에, true 가 반환되면, 원래 컨트롤러로 이어서 동작하게 하기.
 	}
 	
 	

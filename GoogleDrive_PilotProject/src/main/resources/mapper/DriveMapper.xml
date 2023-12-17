@@ -118,6 +118,23 @@
 		WHERE DIR_ID=#{dirId}
 	</select>
 	
+<!-- void deleteDirPathByHomeDirCascade(memberId, homeDir); -->
+	<delete id="deleteDirPathByHomeDirCascade" parameterType="string">
+		<![CDATA[
+			DELETE FROM
+				dir_path 
+			start with parent_id = #{homeDir}
+		]]>
+	</delete>
+	
+<!-- String getHomeDirByMemberId(String memberId); -->
+	<select id="getHomeDirByMemberId" parameterType="String" resultType="String">
+		SELECT DIR_ID
+		FROM DIR_PATH
+		WHERE member_id=#{memberId} 
+		AND parent_dir_id is null
+	</select>
+	
 <!--  
 	<select id="getFile" parameterType="int" resultType="string">
 	<![CDATA[

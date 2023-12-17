@@ -7,8 +7,8 @@ import com.example.demo.member.model.Member;
 
 public interface IMemberService {
 	void regMember(Member member); //회원의 최상위 멤버 만들기 // - 공주님
-	void updateMember(String encodedPw, String email); //컨트롤러에서 비밀번호 평문이랑 암호화된거 비교 // - 공주님
-	void deleteMember(Member member); //컨트롤러에서 비밀번호 평문과 암호화 일치한지 비교 // - 공주님
+	void updateMember(String memberId, String encodedPw, String email); //컨트롤러에서 비밀번호 평문이랑 암호화된거 비교 // - 공주님
+	void deleteMember(String memberId); //컨트롤러에서 비밀번호 평문과 암호화 일치한지 비교 // - 공주님
 	String getPasswordByMemberId(String memberId); // 패스워드 가져오기 - 주희
 	
 	Member showMemberInfo(String memberid); // - 석준

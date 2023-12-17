@@ -1,6 +1,7 @@
 package com.example.demo.common.filter;
 
 import java.security.Principal;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,10 +10,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.common.reader.ReadableRequestBodyWrapper;
 import com.example.demo.member.service.IMemberService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.security.auth.message.AuthException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Component
 public class MemberAuthInterceptor implements HandlerInterceptor {
@@ -29,13 +33,31 @@ public class MemberAuthInterceptor implements HandlerInterceptor {
 			wrapper.setAttribute("requestBody", wrapper.getRequestBody());
 			System.out.println("requestBody 출력하기 : " + (String)request.getAttribute("requestBody"));
 			
+			String requestBodyString = (String)request.getAttribute("requestBody");
+			
+			//JacksonLibrary 
+			ObjectMapper objectMapper = new ObjectMapper(); //Jackson ObjectMapper 생성
+			Map<String, Object> requestBodyMap = objectMapper.readValue(requestBodyString, new TypeReference<Map<String, Object>>() {});
+			
 			Principal principal = wrapper.getUserPrincipal();
 			String principalMemberId = principal.getName();
-			String inputMemberId = (String)request.getAttribute("memberId");
+			String inputMemberId = (String) requestBodyMap.get("memberId");
+			String password = (String) requestBodyMap.get("password");
+			String email = (String) requestBodyMap.get("email");
+			
+			System.out.println("principalMemberId : " + principalMemberId);
+			System.out.println("inputMemberId : " + inputMemberId);
 			if (!memberService.isMemberIdAuthenticForMember(principalMemberId, inputMemberId)) {
 				System.out.println("멤버 Auth 인증 실패 : memberService.isMemberIdAuthenticForMember");
 				throw new AuthException();
 			}
+			
+			//인증이 끝난 사용자에 대해서 session 에 멤버 정보를 다시 담아야 함. request 는 여기서 소모 됨. 
+			HttpSession session =  wrapper.getSession();
+			session.setAttribute("memberId", principalMemberId);
+			session.setAttribute("password", password);
+			session.setAttribute("email", email);
+			
 			System.out.println("멤버 Auth 인증 성공");
 			return true;
 	      
