@@ -25,7 +25,7 @@ public interface IDriveService {
 	String getDirPath(String dirId);
 	List<Map<String, Object>> getHomeOfMember(String memberid); //얘는 인증 인터셉터가 필요하지 않음.
 	List<Map<String, Object>> getSubDirectory(String dirId, String memberId); //얘는 인증 인터셉터가 필요함.
-	String downloadFile(String dirId); //얘는 인증 인터셉터가 필요함.
+	Map<String, String> downloadFile(String dirId); //얘는 인증 인터셉터가 필요함.
 	
 	/* 파일을 upload 랑 delete 하면, 해당 폴더의 수정 날짜 변경되어야함 */
 	/* 파일 업로드랑 삭제할 때, 인가 확인해야함 */

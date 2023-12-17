@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -68,13 +69,17 @@ public class DriveService implements IDriveService{
 	}
 
 	@Override
-	public String downloadFile(String dirId) {
+	public Map<String, String> downloadFile(String dirId) {
 		//dirId 를 가지고 가서, DirPath 객체를 가져오자. 
+		Map<String, String> map = new HashMap<>();
 		DirPath dirPathVO = driveRepository.getDirPathVo(dirId);
 		String directory = dirPathVO.getDirectory();
 		String fileName = dirPathVO.getFileName();
-		return directory+"//"+fileName;
+		map.put("fullPath", directory+"//"+fileName);
+		map.put("fileName", fileName);
+		return map;
 	}
+	
 	
 	@Override
 	@Transactional

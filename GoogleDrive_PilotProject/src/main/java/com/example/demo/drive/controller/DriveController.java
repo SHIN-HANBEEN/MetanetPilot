@@ -67,10 +67,11 @@ public class DriveController {
 		logger.info("=================downloadFile Get activate=================");
 		//return driveService.downloadFile(dirid);
 		try {
-			byte[] files = FileUtils.readFileToByteArray(new File("C:\\dev\\google_drive\\kim\\test\\cap.JPG"));
+			Map<String, String> fileInfo = driveService.downloadFile(dirid);
+			byte[] files = FileUtils.readFileToByteArray(new File(fileInfo.get("fullPath")));
 			response.setContentType("application/octet-stream");
             response.setContentLength(files.length);
-            response.setHeader("Content-Disposition","attachment; fileName=\""+ URLEncoder.encode("cap.JPG",StandardCharsets.UTF_8)+"\";");
+            response.setHeader("Content-Disposition","attachment; fileName=\""+ URLEncoder.encode(fileInfo.get("fileName"),StandardCharsets.UTF_8)+"\";");
             response.setHeader("Content-Transfer-Encoding","binary");
 
             response.getOutputStream().write(files);
