@@ -38,7 +38,7 @@ public interface IDriveRepository {
 	String getDirectoryByDirId(@Param("parentDirId")String parentDirId); // 상위폴더의 파일의 경로를 가져오기
 	
 	String getMemberIdByDirId(String dirId);
-	void deleteSharedTable(String memberId);
-	void deleteDirPathByHomeDirCascade(String memberId, String homeDirId);
+//	void deleteSharedTable(String memberId);
+	void deleteDirPathByHomeDirId(String homeDirId);
 	String getHomeDirByMemberId(String memberId);
 }

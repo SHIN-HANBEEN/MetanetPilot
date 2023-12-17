@@ -52,11 +52,11 @@ public class MemberService implements IMemberService{
 	@Transactional
 	@Override
 	public void deleteMember(String memberId) {
-		memberRepository.deleteMemberRole(memberId);
-		driveRepository.deleteSharedTable(memberId);
-		String homeDir = driveRepository.getHomeDirByMemberId(memberId);
-		driveRepository.deleteDirPathByHomeDirCascade(memberId, homeDir);
-		memberRepository.deleteMember(memberId);
+//		memberRepository.deleteMemberRole(memberId); //delete cascade 걸어놔서 member 삭제 될 때 자동으로 삭제 된다.
+//		driveRepository.deleteSharedTable(memberId);
+//		String homeDirId = driveRepository.getHomeDirByMemberId(memberId);
+//		driveRepository.deleteDirPathByHomeDirId(homeDirId); //delete cascade 를 걸어놓아서, 자기참조와, shared_table 자도 삭제 됨.
+		memberRepository.deleteMember(memberId); //delete casecade 를 걸어놔서 member 만 삭제하면 이어서 다 삭제됨.
 
 	}
 	

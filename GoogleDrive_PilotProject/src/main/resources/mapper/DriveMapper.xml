@@ -118,12 +118,22 @@
 		WHERE DIR_ID=#{dirId}
 	</select>
 	
+<!-- void deleteSharedTable(memberId); -->
+	<delete id="deleteSharedTable" parameterType="string">
+		<![CDATA[
+			DELETE FROM
+				shared_table
+			where
+		]]>
+	</delete>
+	
 <!-- void deleteDirPathByHomeDirCascade(memberId, homeDir); -->
-	<delete id="deleteDirPathByHomeDirCascade" parameterType="string">
+	<delete id="deleteDirPathByHomeDirId" parameterType="string">
 		<![CDATA[
 			DELETE FROM
 				dir_path 
-			start with parent_id = #{homeDir}
+			WHERE
+				dir_id = #{homeDirId}
 		]]>
 	</delete>
 	
