@@ -2,7 +2,6 @@ package com.example.demo.member.service;
 
 import java.util.List;
 
-import com.example.demo.member.dto.MemberForUpdate;
 import com.example.demo.member.model.Member;
 
 public interface IMemberService {
@@ -13,8 +12,10 @@ public interface IMemberService {
 	
 	Member showMemberInfo(String memberid); // - 석준
 	List<String> getRoles(String memberid); //이거는 view 페이지 필요 없음. Security 인가처리할 때 쓰려고 만듦 // - 석준
-//	String setGrantMember(int memberId, String dirId); //폴더 공유해주기 // - 석준
+	
+	void setGrantMember(String memberId, String dirId); //폴더 공유해주기 // - 석준
 	
 	boolean isMemberIdAuthenticForDrive(String memberId, String dirId);
 	boolean isMemberIdAuthenticForMember(String principalMemberId, String inputMemberId);
+	boolean isMemberIdAuthenticForGrantMember(String dirId, String principalMemberId);
 }

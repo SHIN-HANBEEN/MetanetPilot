@@ -74,7 +74,20 @@ public class MemberController {
 		return "Member Update Success!";
 	}
 	
-	//PUT - /member/update : 회원 정보 수정 테스트
+	@DeleteMapping(value="/member/delete")
+	public String deleteMember(Principal principal) {
+		memberService.deleteMember(principal.getName());
+		return "Member Delete Success!";		
+	}
+	
+	@PostMapping(value = "/member/grantmember")
+	public String grantMember(HttpSession session) { //인터셉터 통과하는 모든 것은 session 에 담아서 넘겼다.
+		System.out.println("memberId in grantMember : " + (String)session.getAttribute("memberId"));
+		memberService.setGrantMember((String)session.getAttribute("memberId"), (String)session.getAttribute("dirId"));
+		return "Member GrantMember Success!";
+	}
+	
+	//PUT - /member/update : 회원 정보 수정 테스트하려고 만듦
 	@PutMapping(value="/member/update/test")
 	public String updateMemberTest(@RequestBody Map<String, String> MemberMap) {
 		
@@ -82,12 +95,6 @@ public class MemberController {
 		System.out.println("requestbody에서 email 꺼내기" + MemberMap.get("email"));
 		return "Member Update Test Success!";
 	}
-	
-	@DeleteMapping(value="/member/delete")
-	public String deleteMember(Principal principal) {
-		memberService.deleteMember(principal.getName());
-		return "Member Delete Success!";		
-	}	
 	
 }
 

@@ -3,7 +3,7 @@ package com.example.demo.drive.service;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -11,7 +11,6 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,45 +46,31 @@ public class DriveService implements IDriveService{
 	}
 
 	@Override
-	public List<Map<String, Object>> getSubDirectory(String dirId, String memberId) {
-		//dirId 를 가지고 가서, 해당 dirId 의 memberId 를 들고 와야 한다.
-		String dbMemberId = memberRepository.getMemberIdByDirId(dirId);
-		
-		if (dbMemberId.equals(memberId)) {
-			//db에서 들고온 memberId 와 principal 에서 꺼낸 memberId 가 같으면, getSubDirectory 를 실행한다.
-			
-			//그 전에, 폴더인지 파일인지 확인을 해서 폴더면 getSub 를 하고, 파일이면 안내 메시지를 반환한다. 
-			String isFolder = driveRepository.isFolder(dirId);
-			if(isFolder.equals("TRUE")) {
-				return driveRepository.getSubDirectory(dirId);
-			} else {
-				logger.info("========= getSubDirectory is denied because dirId was for file not folder =========");
-			}
-		}
-		return new ArrayList<>(); //빈객체 반환
+	public List<Map<String, Object>> getSubDirectory(String dirId) {
+		return driveRepository.getSubDirectory(dirId); //빈객체 반환
 	}
 
+//	@Override
+//	public Map<String, String> getPath(String dirId) {
+//		//dirId 를 가지고 가서, DirPath 객체를 가져오자. 
+//		Map<String, String> map = new HashMap<>();
+//		DirPath dirPathVO = driveRepository.getDirPathVo(dirId);
+//		String directory = dirPathVO.getDirectory();
+//		String fileName = dirPathVO.getFileName();
+//		map.put("fullPath", directory+"//"+fileName);
+//		map.put("fileName", fileName);
+//		return map;
+//	}
 	@Override
-	public ResponseEntity<byte[]> downloadFile(String dirId, String memberId) {
+	public Map<String, String> getPath(String dirId) {
 		//dirId 를 가지고 가서, DirPath 객체를 가져오자. 
+		Map<String, String> map = new HashMap<>();
 		DirPath dirPathVO = driveRepository.getDirPathVo(dirId);
-		
-		//dirId 를 가지고 가서, 해당 dirId 의 memberId 를 들고 와야 한다.
-		String dbMemberId = dirPathVO.getMemberId();
-		
-		if (dbMemberId.equals(memberId)) {//db에서 들고온 memberId 와 principal 에서 꺼낸 memberId 가 같은지 확인한다.
-			//그 전에, 폴더인지 파일인지 확인을 해서 파일이면 다운로드를 하고, 폴더면 안내 메시지를 반환한다. 
-			String isFolder = dirPathVO.getIsFolder();
-			if(isFolder.equals("TRUE")) {
-				logger.info("========= getSubDirectory is denied because dirId was for Folder not file =========");
-			} else {
-				String path = dirPathVO.getDirectory();
-				
-				//driveRepository.sendFile 을 사용해서 file 을 서버 local 에서 들고온 것을 반환한다.
-				return driveRepositoryForFile.sendFile(path);
-			}
-		}
-		return (ResponseEntity<byte[]>) new Object(); //빈 MultipartFile 반환
+		String directory = dirPathVO.getDirectory();
+		String fileName = dirPathVO.getFileName();
+		map.put("fullPath", directory+"//"+fileName);
+		map.put("fileName", fileName);
+		return map;
 	}
 	
 	@Override
@@ -104,9 +89,29 @@ public class DriveService implements IDriveService{
 				Date nowDate = new Date(date.getTime());
 				String contentType = multipartFile.getContentType();
 				System.out.println(originalFilename);
-				driveRepository.uploadFile(new DirPath(uuid, memberId, parentDirId, 
-						parentDirPath, "FALSE", nowDate, nowDate, contentType, (int)multipartFile.getSize(), 
-						originalFilename));
+				System.out.println("===========================");
+				System.out.println("uuid : " + uuid);
+				System.out.println("parentDirId : " + parentDirId);
+				System.out.println("memberId : " + memberId);
+				System.out.println("parentDirPath : " + parentDirPath);
+				System.out.println("regDate : " + nowDate);
+				System.out.println("originalFilename" + originalFilename);
+//				System.out.println("uuid : " + uuid);
+//				System.out.println("uuid : " + uuid);
+//				System.out.println("uuid : " + uuid);
+//				System.out.println("uuid : " + uuid);
+				
+				driveRepository.uploadFile(
+								uuid, 
+								parentDirId, 
+								memberId, 
+								parentDirPath, 
+								"FALSE", 
+								nowDate, 
+								nowDate, 
+								"kkk", 
+								10, 
+								originalFilename);
 			} catch (IOException e) {
 				System.out.println("로컬 경로에 파일 쓰기 실패");
 				return false;

@@ -1,6 +1,9 @@
 package com.example.demo.member.service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,9 +42,13 @@ public class MemberService implements IMemberService{
 	
 	@Override
 	public boolean isMemberIdAuthenticForDrive(String memberId, String dirId) {
-		System.out.println("멤버서비스실행됨");
-		return memberId.equals(driveRepository.getMemberIdByDirId(dirId));
+	    System.out.println("멤버서비스실행됨");
+	    List<Map<String, String>> memberIdList = memberRepository.getCascadeMemberIdByDirIdInDirPathAndSharedTable(dirId);
+	    Stream<String> flatMemberIdStream = memberIdList.stream()
+	            .flatMap(map -> map.values().stream().distinct()); //flatMap으로 Stream<String> 을 만든 다음,
+	    return flatMemberIdStream.anyMatch(id -> id.equals(memberId)); //anyMatch 로 일치하는 것이 있는지 확인하기
 	}
+
 	
 	@Override
 	public boolean isMemberIdAuthenticForMember(String principalMemberId, String inputMemberId) {
@@ -73,6 +80,17 @@ public class MemberService implements IMemberService{
 	@Override
 	public List<String> getRoles(String memberid) {
 		return memberRepository.getRoles(memberid);
+	}
+
+	@Override
+	public void setGrantMember(String memberId, String dirId) {
+		memberRepository.setGrantMember(memberId, dirId);
+	}
+
+	@Override
+	public boolean isMemberIdAuthenticForGrantMember(String dirId, String inputMemberId) {
+		return memberRepository.getMemberIdByDirIdInDirPath(dirId).equals(inputMemberId) || (memberRepository.getPasswordByMemberId(inputMemberId) != null);
+		//MEMBER 테이블에 등록된 회원을, 특정 DIR_ID 에 대해서 권한을 주기 위해, 등록되어있는지, DIR_ID 에 대한 '주인'일 때만 가능하도록 반환.
 	}
 
 	

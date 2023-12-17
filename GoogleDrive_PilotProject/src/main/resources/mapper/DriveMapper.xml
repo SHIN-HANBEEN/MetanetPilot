@@ -98,13 +98,22 @@
 	</select>
 	
 	<insert id="makeFolder" >
-		INSERT INTO DIR_PATH (DIR_ID, MEMBER_ID, PARENT_DIR_ID, DIRECTORY, CREATE_DATE, MODIFY_DATE, CONTENT_TYPE, FILE_SIZE, FILE_NAME, IS_FOLDER)
-		VALUES(#{dirId},#{memberId},#{parentDirId},#{directory},#{createDate},#{modifyDate},#{contentType},#{fileSize},#{fileName},#{isFolder})
+		INSERT INTO DIR_PATH (DIR_ID, PARENT_DIR_ID, MEMBER_ID, DIRECTORY, IS_FOLDER, CREATE_DATE, MODIFY_DATE, CONTENT_TYPE, FILE_SIZE, FILE_NAME)
+		VALUES(#{dirId}, #{parentDirId}, #{memberId},#{directory}, #{isFolder}, #{createDate},#{modifyDate},#{contentType},#{fileSize},#{fileName})
 	</insert>
 	
-	<insert id="uploadFile" >
-		INSERT INTO DIR_PATH (DIR_ID, MEMBER_ID, PARENT_DIR_ID, DIRECTORY, CREATE_DATE, MODIFY_DATE, CONTENT_TYPE, FILE_SIZE, FILE_NAME, IS_FOLDER)
-		VALUES(#{dirId},#{memberId},#{parentDirId},#{directory},#{createDate},#{modifyDate},#{contentType},#{fileSize},#{fileName},#{isFolder})
+	<insert id="uploadFile" parameterType="map">
+		INSERT INTO DIR_PATH 
+		VALUES(#{dirId},
+		 #{parentDirId},
+		 #{memberId}, 
+		 #{directory}, 
+		 #{isFolder}, 
+		 #{createDate},
+		 #{modifyDate},
+		 #{contentType},
+		 #{fileSize},
+		 #{fileName})
 	</insert>
 	
 	<delete id="deleteFileCascade">

@@ -29,13 +29,23 @@ public interface IDriveRepository {
 	String isFolder(String dirId); //Folder 인지 확인하기
 	DirPath getDirPathVo(String dirId); //dirPath 객체 가져오기
 	
-	boolean uploadFile(DirPath dirPath); //파일 업로드
+	boolean uploadFile(@Param("dirId") String dirId,
+			@Param("parentDirId") String parentDirId,
+			@Param("memberId") String memberId,
+			@Param("directory") String directory,
+			@Param("isFolder") String isFolder,
+			@Param("createDate") Date createDate,
+			@Param("modifyDate") Date modifyDate,
+			@Param("contentType") String contentType,
+			@Param("fileSize") int fileSize,
+			@Param("fileName") String fileName); //파일 업로드
 	boolean deleteFileCascade(@Param("memberId") String meberId, @Param("parentDirId") String parentDirId, @Param("fileName") String fileName); //CASCADE 설정 DB에서 함
 	boolean updateModifyDate(String dirId, Date date); // 파일 삭제, 업로드 하면, 수정 날짜 변경
 	//폴더 생성
 	boolean makeFolder(DirPath dirPath);
 	//필요해서 새로 만듬 --완승
-	String getDirectoryByDirId(@Param("parentDirId")String parentDirId); // 상위폴더의 파일의 경로를 가져오기
+	String getDirectoryByDirId(@Param("parentDirId") String parentDirId); // 상위폴더의 파일의 경로를 가져오기
+
 	
 	String getMemberIdByDirId(String dirId);
 //	void deleteSharedTable(String memberId);

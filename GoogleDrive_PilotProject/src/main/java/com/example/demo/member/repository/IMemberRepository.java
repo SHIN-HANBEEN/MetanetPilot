@@ -1,11 +1,12 @@
 package com.example.demo.member.repository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.demo.member.model.Member;
 
@@ -14,7 +15,8 @@ import com.example.demo.member.model.Member;
 public interface IMemberRepository {
 	Member showMemberInfo(String memberid);
 	List<String> getRoles(String memberid);
-	String getMemberIdByDirId(String dirId);
+	String getMemberIdByDirIdInDirPath(String dirId);
+	String getMemberIdByDirIdInSharedTable(String dirId);
 	
 	void regMember(Member member);
 	void regMemberRole(String memberId); // regMember에서 role 설정 위해 추가
@@ -26,6 +28,9 @@ public interface IMemberRepository {
 	void deleteMember(String memberId);
 	void deleteSharedTable(String memberId);
 	
+	List<Map<String, String>> getCascadeMemberIdByDirIdInDirPathAndSharedTable(String dirId); //DriveInterceptor 에서 폴더 안의 폴더 등에 대한 권한 인증 확인을 위한 리포지토리
+	
+	void setGrantMember(@Param("memberId") String memberId, @Param("dirId") String dirId);
 	
 	
 	

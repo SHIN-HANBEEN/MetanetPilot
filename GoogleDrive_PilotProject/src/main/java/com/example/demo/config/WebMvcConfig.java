@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.demo.common.filter.DriveAuthInterceptor;
+import com.example.demo.common.filter.MemberAuthForGrantMemberInterceptor;
 import com.example.demo.common.filter.MemberAuthInterceptor;
 
 
@@ -18,6 +19,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	
 	@Autowired
 	MemberAuthInterceptor memberAuthInterceptor;
+	
+	@Autowired
+	MemberAuthForGrantMemberInterceptor memberAuthForGrantMemberInterceptor;
 	
 	
 	
@@ -53,7 +57,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 //		registry.addInterceptor(localeChangeInterceptor());
 		registry.addInterceptor(driveAuthInterceptor)
-				.addPathPatterns("/drive/**");
+				.addPathPatterns("/drive/getsub")
+//				.addPathPatterns("/drive/download")
+//				.addPathPatterns("/drive/upload")
+				.order(Ordered.HIGHEST_PRECEDENCE);
+		registry.addInterceptor(memberAuthForGrantMemberInterceptor)
+				.addPathPatterns("/member/grantmember")
+				.order(Ordered.HIGHEST_PRECEDENCE);
 		registry.addInterceptor(memberAuthInterceptor)
 				.addPathPatterns("/member/update") //이것도 엄밀히 말하면, 사용할 필요가 없긴 했음,, 
 				.order(Ordered.HIGHEST_PRECEDENCE); //interceptor 가 동작한 다음에, true 가 반환되면, 원래 컨트롤러로 이어서 동작하게 하기.

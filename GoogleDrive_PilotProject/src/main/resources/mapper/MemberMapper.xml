@@ -38,12 +38,22 @@
 	    ]]>
 	</select>
 	
-<!-- String getMemberIdByDirId(String dirId); -->
-	<select id="getMemberIdByDirId" parameterType="string" resultType="string">
+<!-- String getMemberIdByDirIdInDirPath(String dirId); -->
+	<select id="getMemberIdByDirIdInDirPath" parameterType="string" resultType="string">
 	    <![CDATA[
 	        SELECT 
 	            MEMBER_ID AS "memberId"
 	        FROM DIR_PATH
+	        WHERE DIR_ID=#{dirId}
+	    ]]>
+	</select>
+	
+<!-- String getMemberIdByDirIdInSharedTable(String dirId); -->
+	<select id="getMemberIdByDirIdInSharedTable" parameterType="string" resultType="string">
+	    <![CDATA[
+	        SELECT 
+	            MEMBER_ID AS "memberId"
+	        FROM SHARED_TABLE
 	        WHERE DIR_ID=#{dirId}
 	    ]]>
 	</select>
@@ -91,7 +101,27 @@
 	</delete>
 
 
-
+<!-- List<Map<String, String>> getCascadeMemberIdByDirIdInDirPathAndSharedTable(String dirId); -->
+	<select id="getCascadeMemberIdByDirIdInDirPathAndSharedTable" parameterType="string" resultType="hashmap">
+		<![CDATA[
+			SELECT d.MEMBER_ID AS "DP's MEMBER_ID", s.MEMBER_ID AS "ST's MEMBER_ID"
+			FROM DIR_PATH d 
+			LEFT JOIN SHARED_TABLE s ON d.DIR_ID = s.DIR_ID
+			START WITH d.DIR_ID = #{dirId}
+			CONNECT BY PRIOR d.DIR_ID = d.PARENT_DIR_ID
+	    ]]>
+	</select>
+	
+	
+<!-- void setGrantMember(@Param("memberId") String memberId,@Param("dirId") String dirId);
+	parameter 가 여러 개면, parameterType 은 map 으로 만들고, @Param 으로 여기서 사용할 이름을 지정해주면 된다.
+ -->
+	<insert id="setGrantMember" parameterType="map">
+		<![CDATA[
+			INSERT INTO SHARED_TABLE
+			VALUES(#{memberId}, #{dirId}) 
+		]]>
+	</insert>
 
 
 

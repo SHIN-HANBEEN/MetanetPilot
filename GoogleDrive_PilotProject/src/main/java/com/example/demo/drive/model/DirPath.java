@@ -13,8 +13,8 @@ import lombok.ToString;
 @ToString
 public class DirPath {
 	private String dirId;
-	private String memberId;
 	private String parentDirId;
+	private String memberId;
 	private String directory;
 	private String isFolder;
 	private Date createDate;

@@ -21,9 +21,9 @@ public interface IDriveService {
 //	void makeFolder(int memberId, String parentDirId); //폴더 만들기 // -완승
 	
 	String getDirPath(String dirId);
-	List<Map<String, Object>> getHomeOfMember(String memberid); //얘는 인증 인터셉터가 필요하지 않음.
-	List<Map<String, Object>> getSubDirectory(String dirId, String memberId); //얘는 인증 인터셉터가 필요함.
-	ResponseEntity<byte[]> downloadFile(String dirId, String memberId); //얘는 인증 인터셉터가 필요함.
+	List<Map<String, Object>> getHomeOfMember(String memberid); //principal.getName 을 이용하기 때문에, 인증 인터셉터가 필요하지 않음.
+	List<Map<String, Object>> getSubDirectory(String dirId); //얘는 인증 인터셉터가 필요함. memberId 는 principal 에서 꺼내..
+	Map<String, String> getPath(String dirId); //얘는 인증 인터셉터가 필요함.
 	
 	/* 파일을 upload 랑 delete 하면, 해당 폴더의 수정 날짜 변경되어야함 */
 	/* 파일 업로드랑 삭제할 때, 인가 확인해야함 */
