@@ -59,4 +59,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		registry.addInterceptor(memberAuthInterceptor)
 				.addPathPatterns("/member/update");
 	}
+	
+	
 }

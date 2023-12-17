@@ -66,6 +66,15 @@ public class MemberController {
 		return "Member Update Success!";
 	}
 	
+	//PUT - /member/update : 회원 정보 수정 테스트
+	@PutMapping(value="/member/update/test")
+	public String updateMemberTest(@RequestBody Map<String, String> MemberMap) {
+		
+		System.out.println("requestbody에서 email 꺼내기" + MemberMap.get("email"));
+		System.out.println("requestbody에서 email 꺼내기" + MemberMap.get("email"));
+		return "Member Update Test Success!";
+	}
+	
 //	@PostMapping(value="/member/delete")
 //	public String deleteMember(@RequestBody Map<String, String> member, Principal principal) {
 //		String encodedPw = passwordEncoder.encode(member.get("memberId")); 
