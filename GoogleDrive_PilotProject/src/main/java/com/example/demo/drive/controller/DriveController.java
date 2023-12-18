@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -120,7 +121,7 @@ public class DriveController {
 //		return "uploadfile success";
 //	}
 	
-   @PostMapping(path = "/folders/{uuid}", consumes = "multipart/form-data", produces = "application/json")
+   @PostMapping(path = "/folders/{uuid}", consumes = "multipart/form-data; ; charset=UTF-8", produces = "application/json")
    public void uploadFile(@RequestParam(value = "file", required = false) MultipartFile multipartFile, @PathVariable String uuid,
            Principal principal) {
       System.out.println(principal.getName());
@@ -128,6 +129,14 @@ public class DriveController {
       System.out.println(multipartFile.getName());
       
       boolean uploadFile = driveService.uploadFile(principal.getName(), uuid, multipartFile);
+   }
+   
+   @PostMapping(path = "/uploadmultiplefiles/{uuid}", consumes = "multipart/form-data; charset=UTF-8", produces = "application/json")
+   public void uploadMultipleFIles(@RequestParam MultipartFile[] files, Model model) {
+	   // Example: Printing file names
+       for (MultipartFile file : files) {
+           System.out.println("Uploaded file: " + file.getOriginalFilename());
+       }
    }
 	
 	
