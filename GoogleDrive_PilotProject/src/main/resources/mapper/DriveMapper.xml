@@ -2,9 +2,176 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.myapp.board.dao.IBoardRepository">
+<mapper namespace="com.example.demo.drive.repository.IDriveRepository">
+	<!-- String getDirPath(String dirId); -->
+	<select id="getDirPath" parameterType="String" resultType="string">
+	<![CDATA[
+		SELECT 
+			DIRECTORY			AS "directory"
+		FROM DIR_PATH
+		WHERE DIR_ID=#{dirId}
+	]]>
+	</select>
+	
+	<!-- List<DirPath> getHomeOfMember(int memberid);
+		/drive/home 계층형 쿼리 -->
+	<select id="getHomeOfMember" parameterType="string" resultType="map">
+    <![CDATA[
+        SELECT 
+		    dir_id AS "dirId",
+		    member_id AS "memberId",
+		    parent_dir_id AS "parentDirId",
+		    directory AS "directory",
+		    is_folder AS "isFolder",
+		     create_date AS "createDate",
+		     modify_date AS "modifyDate",
+		     content_type AS "contentType",
+		     file_size AS "fileSize",
+		     file_name AS "fileName",
+		     level
+		FROM dir_path
+		WHERE member_id = #{memberId} AND level < 3 
+		START WITH parent_dir_id IS NULL
+		CONNECT BY PRIOR dir_id = parent_dir_id
+		ORDER BY dir_id
+    ]]>
+	</select>
+	
+	<!-- List<DirPath> getSubDirectory(String parentdirid);
+		/drive/getsub 계층형 쿼리(계층형으로 안해도 되긴 함) -->
+	<select id="getSubDirectory" parameterType="string" resultType="map"> <!-- map 으로 한 이유는 계층 쿼리 level 을 같이 보려고 -->
+    <![CDATA[
+		SELECT 
+		     dir_id AS "dirId",
+		    member_id AS "memberId",
+		    parent_dir_id AS "parentDirId",
+		    directory AS "directory",
+		    is_folder AS "isFolder",
+		     create_date AS "createDate",
+		     modify_date AS "modifyDate",
+		     content_type AS "contentType",
+		     file_size AS "fileSize",
+		     file_name AS "fileName",
+		     level
+		FROM dir_path
+		WHERE level < 2 
+		START WITH parent_dir_id = #{dirId}
+		CONNECT BY PRIOR dir_id = parent_dir_id
+		ORDER BY dir_id
+    ]]>
+	</select>
+	
+	<!-- String isFolder(String dirId); -->
+	<select id="isFolder" parameterType="string" resultType="string"> <!-- map 으로 한 이유는 계층 쿼리 level 을 같이 보려고 -->
+    <![CDATA[
+		SELECT 
+		     is_folder as "isFolder"
+		FROM dir_path
+		WHERE dir_id = #{dirId}
+    ]]>
+	</select>
+	
+	<!-- DirPath getDirPathVo(String dirId);
+		/drive/downloadFile -->
+	<select id="getDirPathVo" parameterType="string" resultType="com.example.demo.drive.model.DirPath"> <!-- map 으로 한 이유는 계층 쿼리 level 을 같이 보려고 -->
+    <![CDATA[
+		SELECT 
+		     dir_id AS "dirId",
+		    member_id AS "memberId",
+		    parent_dir_id AS "parentDirId",
+		    directory AS "directory",
+		    is_folder AS "isFolder",
+		     create_date AS "createDate",
+		     modify_date AS "modifyDate",
+		     content_type AS "contentType",
+		     file_size AS "fileSize",
+		     file_name AS "fileName"
+		FROM dir_path
+		WHERE dir_id = #{dirId}
+    ]]>
+	</select>
+	
+<!-- 완승좌 -->
+<!-- 완승 -->
+	<select id="getDirectoryByDirId" parameterType="String" resultType="String">
+		SELECT DIRECTORY FROM DIR_PATH WHERE DIR_ID=#{parentDirId}
+	</select>
+	
+	<insert id="makeFolder" >
+		INSERT INTO DIR_PATH (DIR_ID, PARENT_DIR_ID, MEMBER_ID, DIRECTORY, IS_FOLDER, CREATE_DATE, MODIFY_DATE, CONTENT_TYPE, FILE_SIZE, FILE_NAME)
+		VALUES(#{dirId}, #{parentDirId}, #{memberId},#{directory}, #{isFolder}, #{createDate},#{modifyDate},#{contentType},#{fileSize},#{fileName})
+	</insert>
+	
+	<insert id="uploadFile" parameterType="map">
+		INSERT INTO DIR_PATH 
+		VALUES(#{dirId},
+		 #{parentDirId},
+		 #{memberId}, 
+		 #{directory}, 
+		 #{isFolder}, 
+		 #{createDate},
+		 #{modifyDate},
+		 #{contentType},
+		 #{fileSize},
+		 #{fileName})
+	</insert>
+	
+	<delete id="deleteFileCascade">
+		DELETE DIR_PATH WHERE MEMBER_ID=#{memberId} AND PARENT_DIR_ID=#{parentDirId} AND FILE_NAME=#{fileName}
+	</delete>
+	
+<!-- String getMemberIdByDirId(String dirId); -->
+	<select id="getMemberIdByDirId" parameterType="String" resultType="String">
+		SELECT MEMBER_ID
+		FROM DIR_PATH
+		WHERE DIR_ID=#{dirId}
+	</select>
+	
+<!-- void deleteSharedTable(memberId); -->
+	<delete id="deleteSharedTable" parameterType="string">
+		<![CDATA[
+			DELETE FROM
+				shared_table
+			where
+		]]>
+	</delete>
+	
+<!-- void deleteDirPathByHomeDirCascade(memberId, homeDir); -->
+	<delete id="deleteDirPathByHomeDirId" parameterType="string">
+		<![CDATA[
+			DELETE FROM
+				dir_path 
+			WHERE
+				dir_id = #{homeDirId}
+		]]>
+	</delete>
+	
+<!-- String getHomeDirByMemberId(String memberId); -->
+	<select id="getHomeDirByMemberId" parameterType="String" resultType="String">
+		SELECT DIR_ID
+		FROM DIR_PATH
+		WHERE member_id=#{memberId} 
+		AND parent_dir_id is null
+	</select>
+	
+<!--  
+	<select id="getFile" parameterType="int" resultType="string">
+	<![CDATA[
+		SELECT 
+			file_id				AS "fileId", 
+			board_id			AS "boardId", 
+			file_name			AS "fileName", 
+			file_size			AS "fileSize", 
+			file_content_type	AS "fileContentType", 
+			file_data 			AS "fileData"
+		FROM board_upload_file 
+		WHERE file_id=#{fileId}
+	]]>
+	</select>
+-->
 
-	<select id="selectArticleListByCategory" parameterType="hashmap" resultType="com.example.myapp.board.model.Board">
+<!--  
+	<select id="selectArticleListByCategory" parameterType="hashmap" resultType="com.example.demo.drive.model.DirPath">
 	<![CDATA[
 		SELECT 
 			board_id 		AS "boardId", 
@@ -31,6 +198,7 @@
 		WHERE rnum BETWEEN #{start} AND #{end}
 	]]>
 	</select>
+-->
 	
 <!-- 	<select id="selectArticleListByCategory" parameterType="hashmap" resultType="com.example.myapp.board.model.Board">
 	<![CDATA[
@@ -52,7 +220,8 @@
 	FETCH FIRST 10 ROWS ONLY
 	]]>
 	</select> -->
-	
+
+<!--  
 	<select id="selectArticle" parameterType="int" resultType="com.example.myapp.board.model.Board">
 	<![CDATA[
 		SELECT 
@@ -76,7 +245,9 @@
 		WHERE board.board_id=#{boardId}
 	]]>
 	</select>
-	
+-->
+
+<!-- 
 	<update id="updateReadCount" parameterType="int">
 	<![CDATA[
 		UPDATE board 
@@ -278,4 +449,6 @@
 	    WHERE rnum BETWEEN #{start} AND #{end}
 	]]>
 	</select>
+	
+	-->
 </mapper>

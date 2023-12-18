@@ -2,6 +2,8 @@ package com.example.demo.member.model;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -11,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.drive.controller.DriveController;
 import com.example.demo.drive.service.IDriveService;
 import com.example.demo.member.service.IMemberService;
 
@@ -18,18 +21,21 @@ import com.example.demo.member.service.IMemberService;
 @Component
 public class MemberUserDetailsService implements UserDetailsService {
 	
+	private static final Logger logger = LoggerFactory.getLogger(DriveController.class);
+	
 	@Autowired
 	private IMemberService memberService;
 
 	@Override
-	public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
-		Member memberInfo = memberService.showMemberInfo(Integer.parseInt(memberId));
-		if(memberInfo == null) { //로그인하지 않은 사용자
-			throw new UsernameNotFoundException("[" + memberInfo.getMemberName() + "] 사용자는 없습니다."); 
+	public UserDetails loadUserByUsername(String memberid) throws UsernameNotFoundException {
+		logger.info("memberid : " + memberid);
+		Member member = memberService.showMemberInfo(memberid);
+		if(member == null) { //로그인하지 않은 사용자
+			throw new UsernameNotFoundException("[" + member.getMemberId() + "] 사용자는 없습니다."); 
 			//SpringSecurity 가 갖는 예외 발생 with 메시지
 		}
 		
-		List<String> roles = memberService.getRoles(Integer.valueOf(memberId));
+		List<String> roles = memberService.getRoles(memberid);
 
 		// 위의 권한을 활용해서 authorities 를 만들어야 합니다. 
 		
@@ -40,10 +46,10 @@ public class MemberUserDetailsService implements UserDetailsService {
 		// 위에서 비밀번호는 일단, 평문으로 가져왔으니 {noop} 으로 알려줘야합니다.
 		
 		// 만일 기본 정보 말고, 다른 컬럼을 포함해서 반환하려면 아래와 같이 User 구현한 객체 반환
-		return new MemberUserDetails(memberInfo.getMemberName(),
-				"{noop}" + memberInfo.getPassword(),
+		return new MemberUserDetails(member.getMemberId(),
+				"{noop}" + member.getPassword(),
 				authorities,
-				memberInfo.getEmail(), memberInfo.getMemberId());
+				member.getEmail());
 	}
 
 }

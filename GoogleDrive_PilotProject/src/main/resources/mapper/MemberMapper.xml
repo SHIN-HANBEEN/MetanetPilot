@@ -2,8 +2,130 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.myapp.member.dao.IMemberRepository">
+<mapper namespace="com.example.demo.member.repository.IMemberRepository">
 
+<!-- int regMember(Member member) -->
+	<insert id="regMember" parameterType="com.example.demo.member.model.Member">
+		<![CDATA[ INSERT INTO member (member_id, password, email) VALUES (#{memberId}, #{password}, #{email}) ]]>
+	</insert>
+
+<!-- void regMemberRole(String memberId); // regMember에서 role 설정 위해 추가 -->
+	<insert id="regMemberRole" parameterType="string">
+		<![CDATA[ INSERT INTO member_roles (role, member_id) VALUES ('ROLE_USER', #{memberId}) ]]>
+	</insert>
+
+<!-- Member showMemberInfo(string memberId);-->
+	<select id="showMemberInfo" parameterType="string" resultType="com.example.demo.member.model.Member">
+	    <![CDATA[
+	        SELECT 
+	            MEMBER_ID AS "memberId",
+	            PASSWORD AS "password",
+	            EMAIL AS "email"
+	        FROM MEMBER
+	        WHERE MEMBER_ID=#{memberid}
+	    ]]>
+	</select>
+
+
+<!-- List<String> getRoles(string memberId); -->
+	<select id="getRoles" parameterType="string" resultType="string">
+	    <![CDATA[
+	        SELECT 
+	            ROLE AS "role",
+	            MEMBER_ID AS "memberId"
+	        FROM MEMBER_ROLES
+	        WHERE MEMBER_ID=#{memberid}
+	    ]]>
+	</select>
+	
+<!-- String getMemberIdByDirIdInDirPath(String dirId); -->
+	<select id="getMemberIdByDirIdInDirPath" parameterType="string" resultType="string">
+	    <![CDATA[
+	        SELECT 
+	            MEMBER_ID AS "memberId"
+	        FROM DIR_PATH
+	        WHERE DIR_ID=#{dirId}
+	    ]]>
+	</select>
+	
+<!-- String getMemberIdByDirIdInSharedTable(String dirId); -->
+	<select id="getMemberIdByDirIdInSharedTable" parameterType="string" resultType="string">
+	    <![CDATA[
+	        SELECT 
+	            MEMBER_ID AS "memberId"
+	        FROM SHARED_TABLE
+	        WHERE DIR_ID=#{dirId}
+	    ]]>
+	</select>
+
+<!-- void updateMember(@Param("memberId") String memberId, @Param("encodedPw") String encodedPw, @Param("email") String email); -->
+	<update id="updateMember" parameterType="map">
+
+        UPDATE MEMBER
+        <set>
+            <if test="encodedPw != null">password=#{encodedPw},</if>
+            <if test="email != null">email=#{email},</if>
+        </set>
+        WHERE member_id=#{memberId}
+        
+	</update>
+	
+<!-- String getPasswordByMemberId(String memberId); -->
+	<select id="getPasswordByMemberId" parameterType="string">
+		<![CDATA[
+	        SELECT 
+	            password as "password"
+	        FROM MEMBER
+	        WHERE MEMBER_ID=#{memberId}
+	    ]]>
+	</select>
+
+<!-- void deleteMemberRole(String memberId); -->
+	<delete id="deleteMemberRole" parameterType="string">
+		<![CDATA[
+			DELETE FROM
+				member_roles 
+			WHERE
+				member_id=#{memberId}
+		]]>
+	</delete>
+
+<!-- void deleteMember(String memberId); -->
+	<delete id="deleteMember" parameterType="string">
+		<![CDATA[
+			DELETE FROM
+				member 
+			WHERE
+				member_id=#{memberId}
+		]]>
+	</delete>
+
+
+<!-- List<Map<String, String>> getCascadeMemberIdByDirIdInDirPathAndSharedTable(String dirId); -->
+	<select id="getCascadeMemberIdByDirIdInDirPathAndSharedTable" parameterType="string" resultType="hashmap">
+		<![CDATA[
+			SELECT d.MEMBER_ID AS "DP's MEMBER_ID", s.MEMBER_ID AS "ST's MEMBER_ID"
+			FROM DIR_PATH d 
+			LEFT JOIN SHARED_TABLE s ON d.DIR_ID = s.DIR_ID
+			START WITH d.DIR_ID = #{dirId}
+			CONNECT BY PRIOR d.DIR_ID = d.PARENT_DIR_ID
+	    ]]>
+	</select>
+	
+	
+<!-- void setGrantMember(@Param("memberId") String memberId,@Param("dirId") String dirId);
+	parameter 가 여러 개면, parameterType 은 map 으로 만들고, @Param 으로 여기서 사용할 이름을 지정해주면 된다.
+ -->
+	<insert id="setGrantMember" parameterType="map">
+		<![CDATA[
+			INSERT INTO SHARED_TABLE
+			VALUES(#{memberId}, #{dirId}) 
+		]]>
+	</insert>
+
+
+
+<!-- 
 	<insert id="insertMember" parameterType="com.example.myapp.member.model.Member">
 	<![CDATA[
 		INSERT INTO 
@@ -35,7 +157,8 @@
 			member
 	]]>
 	</select>
-	
+ -->
+ 
 	<!--  update 는 들어오는 값을 기준으로 동적 처리를 하기 위해서, 아래에 추가했습니다.
 	<update id="updateMember" parameterType="com.example.myapp.member.model.Member">
 	<![CDATA[
@@ -47,7 +170,8 @@
 	]]>
 	</update>
 	-->
-	
+
+<!--  
 	<update id="updateMember" parameterType="com.example.demo.member.model.Member">
     <![CDATA[
         UPDATE MEMBER
@@ -78,5 +202,5 @@
 		WHERE userid=#{userid}
 	]]>
 	</select>
-	
+-->
 </mapper>
