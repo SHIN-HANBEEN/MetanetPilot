@@ -65,7 +65,7 @@ public class DriveController {
 	@GetMapping("/downloadfile")
 	public void downloadFile(@RequestParam String dirid, HttpServletResponse response) {
 		logger.info("=================downloadFile Get activate=================");
-		//return driveService.downloadFile(dirid);
+		//return driveService.downloadFile(dirid);//
 		try {
 			Map<String, String> fileInfo = driveService.downloadFile(dirid);
 			byte[] files = FileUtils.readFileToByteArray(new File(fileInfo.get("fullPath")));
