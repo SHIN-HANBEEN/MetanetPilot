@@ -37,7 +37,8 @@ public class MemberAuthForGrantMemberInterceptor implements HandlerInterceptor {
 			
 			//JacksonLibrary 
 			ObjectMapper objectMapper = new ObjectMapper(); //Jackson ObjectMapper 생성
-			Map<String, Object> requestBodyMap = objectMapper.readValue(requestBodyString, new TypeReference<Map<String, Object>>() {});
+			Map<String, Object> requestBodyMap = 
+					objectMapper.readValue(requestBodyString, new TypeReference<Map<String, Object>>() {});
 			
 			Principal principal = wrapper.getUserPrincipal();
 			String principalMemberId = principal.getName();
